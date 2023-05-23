@@ -34,7 +34,7 @@ router.get('/dogs/name?', async (req, res) => {
     try {
         const {name} = req.query
         const allBreeds = await buscarDatos();        
-        const dog = allBreeds?.find(d => d.name.toLowerCase().includes(name.toLowerCase()))
+        const dog = allBreeds?.find(d => d.name.toLowerCase() === name.toLowerCase())
         
         if (dog){
             res.status(200).json(dog)
