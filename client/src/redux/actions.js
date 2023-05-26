@@ -96,3 +96,12 @@ export function handleFilterOrigin(origin) {
         payload: origin
     }
 }
+
+//RESET DETAIL
+
+export function resetDetail() {
+    return{
+        type:"RESET_DETAIL",
+        payload: []
+    }
+}

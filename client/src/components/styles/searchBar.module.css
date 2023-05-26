@@ -1,0 +1,14 @@
+.btnSearch{
+    margin: 2px;
+    font-family: 'Acme';
+    background-color: rgba(128, 128, 128, 0.329);
+    padding: 3px;
+    border: 1px solid black;
+    width: 4rem;
+    border-radius: 5px;
+}
+
+.btnSearch:hover{
+    text-shadow: 1px 1px black;
+    background-color: rgba(128, 128, 128, 0.507);
+}

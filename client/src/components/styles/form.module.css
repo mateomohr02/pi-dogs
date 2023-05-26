@@ -1,0 +1,78 @@
+@font-face {
+    font-family: 'Acme';
+    src: url('./Acme-Regular.ttf');
+}
+
+
+.displayer{
+    background-image: url(https://static.vecteezy.com/system/resources/previews/017/551/368/non_2x/many-prints-of-dog-paws-and-bones-on-white-background-pattern-for-design-vector.jpg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100vw;
+    height: 91.8vh;
+}
+
+.form{
+    width: 40vw;
+    display: flex;
+    flex-direction: column;
+    margin-top: 5rem;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid black;
+    border-radius: 15px;
+    background-color: rgba(128, 128, 128, 0.329);
+    margin-bottom: 2rem;
+}
+
+.containerInputs{
+    margin: 2rem;
+}
+.twins{
+    margin-left: 2rem;
+}
+
+
+.btn{
+    width: 7rem;
+    text-decoration: none;
+    font-family: 'Acme';
+    font-size: 2rem;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px; 
+    padding: 3px;
+    background-color: rgba(128, 128, 128, 0.329);  
+}
+
+.btn:hover{
+    text-shadow: 1px 1px black;
+    border-width: 2px;
+}
+
+.text{
+    font-family: 'Acme';
+}
+
+.errors{
+    color: red;
+}
+
+.tempBox{
+    font-family: 'Acme';
+    font-size: 1.5rem;
+    margin: 8px;
+    width: fit-content;
+}
+
+.showedTemps{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+

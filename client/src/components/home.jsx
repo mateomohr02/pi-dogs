@@ -1,8 +1,10 @@
   import React, { useState,useEffect } from 'react';
   import Card from './card'
-  import ReactPaginate from 'react-paginate'
+  import SearchBar from './searchBar';
+  import Paginate from './paginate'
+  import styles from './styles/home.module.css'
 
-
+  import { useLocation } from 'react-router-dom';
 
   import {useDispatch, useSelector} from 'react-redux'
 
@@ -16,9 +18,8 @@
     const allTemperaments = useSelector (state => state.temperaments)
     const filteredDogs = useSelector(state => state.filteredDogs)
 
-
     const [currentPage, setPage] = useState(1);
-    
+
 
     const dogsPage = 8
     
@@ -36,10 +37,18 @@
 
     const dispatch = useDispatch();
 
+    const location = useLocation()
+
     useEffect(()=>{
       dispatch(getAllDogs())
       dispatch(getTemps())
     },[dispatch])
+
+    useEffect(() => {
+      if (filteredDogs.length === 1) {
+        setPage(1);
+      }
+    }, [filteredDogs]);
 
     const [selectedAlphabeticalOrder, setAlphabeticalOrder] = useState("");
 
@@ -48,6 +57,8 @@
     const [selectedTemp, setTemp] = useState("All");
 
     const [selectedOrigin, setOrigin] = useState("All")
+
+
 
 
     const handleTempChange = (e) => {
@@ -62,9 +73,7 @@
       dispatch(handleFilterOrigin(origin))
     }
 
-
     const handleclick = () => (dispatch(getAllDogs()))
-
 
     const handleOrderChange = (e) => {
       const order = e.target.value;
@@ -77,8 +86,8 @@
 
       } else if (order === "ASC" || order === "DESC") {
 
-        setWeightOrder(order);
         setAlphabeticalOrder("");
+        setWeightOrder(order);
         dispatch(handleWeightOrder(order));
 
       } else {
@@ -89,69 +98,82 @@
       }
     }
 
+    
+
     return (
       //ORDEN ALFABÉTICO
-      <div>
-        <div>
-          <label>Alphabetical Order</label>
-          <select value={selectedAlphabeticalOrder} onChange={handleOrderChange}>
-              <option disabled value="">
-                Choose...
-              </option>
-              <option value="A-Z">A-Z</option>
-              <option value="Z-A">Z-A</option>
-          </select>
-        </div>
+      <div className={styles.displayer}>
+        <div className={styles.filters}>
+          <div>
+            <label className={styles.nameFilter}>Alphabetical Order: </label>
+            <select value={selectedAlphabeticalOrder} onChange={handleOrderChange}>
+                <option disabled value="">
+                  Choose...
+                </option>
+                <option value="A-Z">A-Z</option>
+                <option value="Z-A">Z-A</option>
+            </select>
+          </div>
 
-        {/* ORDEN PESO */}
-        <div>
-          <label>Weight Order</label>
-          <select value={selectedWeightOrder} onChange={handleOrderChange}>
-              <option disabled value="">
-                Choose...
-              </option>
-              <option value="DESC">DESC</option>
-              <option value="ASC">ASC</option>
-          </select>
-        </div>
+          {/* ORDEN PESO */}
+          <div>
+            <label className={styles.nameFilter} >Weight Order: </label>
+            <select value={selectedWeightOrder} onChange={handleOrderChange}>
+                <option disabled value="">
+                  Choose...
+                </option>
+                <option value="DESC">DESC</option>
+                <option value="ASC">ASC</option>
+            </select>
+          </div>
 
-        {/* FILTRO TEMPS */}
-        <div>
-        <label>Filter Temperaments: </label>
-        <select value={selectedTemp} onChange={handleTempChange}>
-          <option value="All">All</option>
-          {allTemperaments.map((temp) => (
-            <option key={temp.id} value={temp.name}>
-              {temp.name}
-            </option>
-          ))}
-        </select>
-      </div>
+          {/* FILTRO TEMPS */}
+          <div>
+          <label className={styles.nameFilter} >Filter Temperaments: </label>
+          <select value={selectedTemp} onChange={handleTempChange}>
+            <option value="All">All</option>
+            {allTemperaments.map((temp) => (
+              <option key={temp.id} value={temp.name}>
+                {temp.name}
+              </option>
+            ))}
+          </select>
+          </div>
           
-        {/* FILTRO ORIGIN */}
-        <div>
-          <label>Filter Origin: </label>
-          <select value={selectedOrigin} onChange={handleOriginChange}>
-              <option disabled value="ALL">
-                Choose...
-              </option>
-              <option value="ALL">ALL</option>
-              <option value="API">API</option>
-              <option value="DB">DataBase</option>
-          </select>
+          {/* FILTRO ORIGIN */}
+          <div>
+            <label className={styles.nameFilter} >Filter Origin: </label>
+            <select value={selectedOrigin} onChange={handleOriginChange}>
+                <option disabled value="ALL">
+                  Choose...
+                </option>
+                <option value="ALL">All</option>
+                <option value="API">API</option>
+                <option value="DB">DataBase</option>
+            </select>
+          </div>
+
+          {location.pathname === '/create' ? "" : <SearchBar/> }
+        
         </div>
 
-        {/* BOTÓN BACK SEARCH */}
-        {showedDogs.length === 1 ? <button onClick={handleclick}>Back</button> : "" }
-        
-        {/* MOSTRAR LAS CARDS */}
+          {/* BOTÓN BACK SEARCH */}
+                
         <div>
+          {showedDogs.length === 1 ? <button className={styles.btnBackSearch} onClick={handleclick}>Back</button> : "" }
+        </div>
+
+        {/* MOSTRAR LAS CARDS */}
+        <div className={styles.cards}>
             {showedDogs.map((d) => {
               if (d.isInDB){
+                const temperaments = d.temperaments.map((temperament) => temperament.name);
+                const temperamentStr = temperaments.join(", ");
+
                 return <Card 
                 key = {d.id}
                 name = {d.name}
-                temperament = {d.temperament}
+                temperament = {temperamentStr}
                 image = {d.image}
                 weight = {d.weight}
                 height = {d.height}
@@ -169,18 +191,14 @@
               />
               }
             })}
-        
-            <ReactPaginate
-              previousLaabel='Previous'
-              nextLabel="Next"
-              breakLabel="..."
-              pageCount={pageCount}
-              onPageChange={(page) => handlePage(page.selected + 1)}
-              containerClassName="pagination"
-              activeClassName="active"     
-            />
+          </div>
+
+          {filteredDogs.length > 8 ? 
+              <Paginate pageCount={pageCount} currentPage={currentPage} changePage={handlePage} />
+            : "" 
+          }
+            
         </div>
-      </div>
     );
   };
 

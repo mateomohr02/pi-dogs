@@ -1,0 +1,46 @@
+@font-face {
+    font-family: 'Acme';
+    src: url('./Acme-Regular.ttf');
+}
+
+.paginateConatiner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: #F6AA28;
+    height: 7.5vh;
+    width: 100vw;
+    border-top: 1px solid black;
+}
+.buttonPaginate{
+    margin: 10px;
+    font-family: 'Acme';
+}
+
+
+.prevNextButton{
+    margin: 10px;
+    font-family: 'Acme';
+    background-color: rgba(128, 128, 128, 0.329);
+    padding: 3px;
+    border: 1px solid black;
+    width: 4rem;
+    border-radius: 5px;
+}
+
+.buttonPaginate:hover {
+    text-shadow: 1px 1px black;
+}
+
+.prevNextButton:hover {
+    text-shadow: 1px 1px black;
+    background-color: rgba(128, 128, 128, 0.507);
+}
+
+
+.active{
+    border: 1px solid black;
+    width: 2rem;
+    border-radius: 5px;
+}

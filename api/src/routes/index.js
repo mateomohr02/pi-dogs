@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const {Dog, Temperament} = require("../db.js")
-const axios = require('axios')
+const axios = require('axios');
+const { where } = require('sequelize');
 const {key} = process.env
 // Importar todos los routers;
 // Ejemplo: const authRouter = require('./auth.js');
@@ -16,11 +17,23 @@ const buscarDatos = async () => {
     try {
         const dogsApi = await axios.get(`https://api.thedogapi.com/v1/breeds?api_key=${key}`);
 
-        const dogsDB = await Dog.findAll();
+        const dogsDB = await Dog.findAll({
+        include: {
+            model: Temperament,
+            attributes: ['name'], 
+            through: {
+                attributes: [],
+            },
+        }
+    });
 
-        const allDogs = [...dogsApi.data, ...dogsDB]
+    const allDogs = [...dogsApi.data, ...dogsDB]
 
-        return allDogs
+
+      
+    return allDogs;
+
+        
     } catch (error) {
 
         throw new Error('Error al obtener los datos combinados')
@@ -61,30 +74,12 @@ router.get('/dogs/:idRaza', async (req, res) => {
     }
 }) 
 
-// CREAR NUEVO PERRO
-router.post('/dogs', async (req, res) => {
-    try {
-        const { name, weight, height, image, lifeLength } = req.body
-        const newDog = await Dog.create({
-            name,
-            weight,
-            height,
-            image,
-            lifeLength,
-        })
-
-        res.status(200).json(`El perro ${newDog.name} se creo correctamente.`)
-
-    } catch (error) {
-        res.status(400).json({error: error.message})
-    }
-})
 
 // RUTA GET ALL DOGS
 router.get('/dogs', async (req,res) => {
     try {
         const Breeds = await buscarDatos()
-
+        
         res.status(200).json(Breeds)
         
     } catch (error) {
@@ -96,9 +91,9 @@ router.get('/dogs', async (req,res) => {
 router.get('/temperaments', async (req, res) => {    
     try{
         const allTemperaments = await buscarDatos();
-        const allTemps = allTemperaments.map(d => d.temperament)
-        const filteredTemps = allTemps.toString().split(',');
-        filteredTemps.forEach(t => {
+        const allTemps = allTemperaments?.map(d => d.temperament)
+        const filteredTemps = allTemps?.toString().split(',');
+        filteredTemps?.forEach(t => {
             let temp = t.trim()
             Temperament.findOrCreate({
                 where: {name: temp}
@@ -107,11 +102,44 @@ router.get('/temperaments', async (req, res) => {
 
         const temperaments = await Temperament.findAll();
         res.status(200).json(temperaments)
-    
+        
     }catch(error){
         res.status(400).json({error: error.message})
     }
     
 });
 
+// CREAR NUEVO PERRO
+router.post('/dogs', async (req, res) => {
+    const {
+      name,
+      height,
+      weight,
+      image,
+      lifeLength,
+      temperaments
+    } = req.body;
+  
+    try {
+      const dog = await Dog.create({
+        name,
+        height,
+        weight,
+        image,
+        lifeLength
+      });
+  
+      const temperamentsArray = temperaments.split(',').map(item => item.trim());
+  
+      const associateTemperaments = await Temperament.findAll({
+        where: { name: temperamentsArray }
+      });
+  
+      await dog.addTemperaments(associateTemperaments);
+      res.status(200).json(`El perro ${dog.name} se creó correctamente.`);
+      
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  });
 module.exports = router;

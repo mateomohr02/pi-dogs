@@ -1,20 +1,18 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import SearchBar from './searchBar';
-
-
-
+import { Link } from 'react-router-dom';
+import style from './styles/navBar.module.css'
+import paw from './imgs_source/paw.png'
 
 const NavBar = () => {
-
-  const location = useLocation()
   
   return (
-      <div>
-            <h1>Dogs</h1>
-            <Link to='/home' replace>Home</Link>
-            <Link to='/create'>Create</Link>
-            {location.pathname === '/create' ? "" : <SearchBar/> }
+      <div className={style.container}>
+            <h1 className={style.title}>Meet your dog</h1>
+            <img className={style.icon}src={paw} alt="Icon" />
+            <div className={style.links}>
+              <Link className={style.link} to='/home' replace> Home </Link>
+              <Link className={style.link}to='/create'> Create </Link>
+            </div>
         </div>
   );
 };

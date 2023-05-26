@@ -1,0 +1,46 @@
+.displayer{
+    background-image: url(https://static.vecteezy.com/system/resources/previews/017/551/368/non_2x/many-prints-of-dog-paws-and-bones-on-white-background-pattern-for-design-vector.jpg);
+    flex-direction: column;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100vw;
+    height: 91.8vh;
+}
+
+.filters{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-top: 15px;
+}
+
+.cards{
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items:center;
+    justify-content: space-around;
+}
+
+.nameFilter{
+    font-family: 'Acme';
+}
+
+.btnBackSearch{
+    margin: 10px;
+    margin-top: 30px;
+    font-family: 'Acme';
+    font-size: larger;
+    background-color: rgba(128, 128, 128, 0.329);
+    padding: 3px;
+    border: 1px solid black;
+    width: 8rem;
+    border-radius: 5px;
+}
+
+.btnBackSearch:hover{
+    text-shadow: 1px 1px black;
+    background-color: rgba(128, 128, 128, 0.507);
+}

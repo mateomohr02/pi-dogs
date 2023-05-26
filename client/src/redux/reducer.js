@@ -38,36 +38,63 @@ const reducer = (state = initialState, action) => {
                     filteredDogs: [...state.filteredDogs].sort((a, b) => b.name.localeCompare(a.name)),
                 };
             }
-        
+        case "RESET_DETAIL":
+            return{
+                ...state,
+                detail: []
+            }
         case "WEIGHT_ORDER":
-            const { payload: order } = action;
+                const { payload: order } = action;
+              
+            return {
+                ...state,
+                filteredDogs: [...state.filteredDogs].sort((a, b) => {
+                    let weightA, weightB;
+              
+                    if (a.isInDB) {
+                        const [minA] = a.weight.split(" - ");
+                        weightA = parseFloat(minA);
+                    } else {
+                        const [minA] = a.weight.metric.split(" - ");
+                        weightA = parseFloat(minA);
+                    }
+                    
+                    if (b.isInDB) {
+                        const [minB] = b.weight.split(" - ");
+                        weightB = parseFloat(minB);
+                    } else {
+                        const [minB] = b.weight.metric.split(" - ");
+                        weightB = parseFloat(minB);
+                    }
+                    
+                    if (order === "ASC") {
+                        if(isNaN(weightA)){
+                            weightA = 0;
+                            return weightA - weightB
+                        }
+                        if(isNaN(weightB)){
+                            weightB = 0;
+                            return weightA - weightB
+                        }
+                        else{
+                            return weightA - weightB;
+                        }
+                    } else {
+                        if(isNaN(weightA)){
+                            weightA = 0;
+                            return weightB - weightA
 
-        return {
-            ...state,
-            filteredDogs: [...state.filteredDogs].sort((a, b) => {
-            let weightA, weightB;
-
-            if (a.isInDB) {
-                const [minA] = a.weight.split(" - ");
-                weightA = parseFloat(minA);
-            } else {
-                weightA = parseFloat(a.weight.metric);
-            }
-
-            if (b.isInDB) {
-                const [minB] = b.weight.split(" - ");
-                weightB = parseFloat(minB);
-            } else {
-                weightB = parseFloat(b.weight.metric);
-            }
-
-            if (order === "ASC") {
-                return weightA - weightB;
-            } else {
-                return weightB - weightA;
-            }
-            }),
-        };
+                        }
+                        if(isNaN(weightB)){
+                            weightB = 0;
+                            return weightB - weightA
+                        }
+                        else{
+                        return weightB - weightA;
+                        }
+                    }
+                }),
+            };
 
         case "TEMP_FILTERED":
         const { payload: temp } = action;

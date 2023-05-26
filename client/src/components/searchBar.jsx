@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { searchDog } from '../redux/actions';
+import style from './styles/searchBar.module.css'
+
 
 const SearchBar = () => {
 
@@ -20,7 +22,7 @@ const SearchBar = () => {
   return (
     <div>
         <input value={name} onChange={handleChange} type='search'/>
-        <button onClick={handleSubmit}>Search</button> 
+        <button className={style.btnSearch} onClick={handleSubmit}>Search</button> 
     </div>
   );
 };

@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createDog, getTemps } from '../redux/actions';
+
+import style from './styles/form.module.css'
 
 import validate from './validations'
 
 
 const Form = () => {
 
+
   const dispatch = useDispatch()
 
-  //const [errors, setErrors] = useState()
+  //STATES
 
+  const temperaments = useSelector((state) => state.temperaments)
 
-  //FORM AND ERROR STATE
+  const [doneBtn, setDone] = useState(false)
+
   const [errors, setErrors] = useState({
     name: "",
     height: "",
@@ -37,6 +42,8 @@ const Form = () => {
 
   //ONCHANGE HANDLER ERROR SETTER
   const handleChange = (e) => {
+    setDone(true)
+
     setForm({
       ...form,
       [e.target.name]: e.target.value
@@ -48,9 +55,34 @@ const Form = () => {
     }))
   }
 
+  //HANDLER TEMPERAMENTOS
+
+  const handleTemps = (e) => {
+    
+    setForm({
+      ...form,
+      temperaments : [...form.temperaments, e.target.value]
+    })
+  }
+
+  const handleDelete = (temp) => {
+    setForm({
+      ...form,
+      temperaments : form.temperaments.filter(t => t !== temp)
+    })
+  }
+
 
   //DISPATCH ON SUBMIT AND CLEAR
   const handleSubmit = (event) => {
+
+    event.preventDefault()
+
+    const validateSubmit = Object.values(errors).every((error) => error === "") && Object.values(form).every((value) => value !== null)
+
+    if (!validateSubmit || !doneBtn){
+      return alert('Los campos no se han llenado correctamente!')
+    }
 
     let newDog = {
       name: form.name,
@@ -58,11 +90,12 @@ const Form = () => {
       weight:`${form.minWeight} - ${form.maxWeight}`,
       lifeLength: form.lifeLength,
       image: form.image,
-      temperaments: []
-
+      temperaments: form.temperaments.join(', ')
     }
 
-    event.preventDefault()
+    console.log(newDog);
+
+
 
     dispatch(createDog(newDog))
     
@@ -84,40 +117,76 @@ const Form = () => {
     dispatch(getTemps())
   }, [dispatch])
 
-
+  
   return (
-    <div>
-        <form id='form' onSubmit={(e) => handleSubmit(e)}>
-          
-          <label htmlFor="name">Breed Name: </label>
-              <input type="text" name="name" value={form.name} onChange={handleChange} />
-          {form.name === "" ? "": errors.name && <p>{errors.name}</p>}
+    <div className={style.displayer}>
+        <form className={style.form} id='form' onSubmit={(e) => handleSubmit(e)}>
 
-          <label htmlFor="minWeight">Min. Weigth: </label>
-              <input type="text" name="minWeight" value={form.minWeight} onChange={handleChange} />
+          <div className={style.containerInputs}>
+            <label className={style.text} htmlFor="name">Breed Name: </label>
+                <input type="text" name="name" value={form.name} onChange={handleChange} />
+            {form.name === "" ? "": errors.name && <p className={style.errors} >{errors.name}</p>}
+          </div>
 
-          <label htmlFor="maxWeight">Max. Weight: </label>
-              <input type="text" name="maxWeight" value={form.maxWeight} onChange={handleChange} />
-          {form.maxWeight === "" ? "": errors.weight && <p>{errors.weight}</p>}
+          <div className={style.containerInputs}>
+            
+              <label className={style.text} htmlFor="minWeight">Min. Weigth: </label>
+                  <input type="text" name="minWeight" value={form.minWeight} onChange={handleChange} />
+      
+              <label className={`${style.text} ${style.twins}`} htmlFor="maxWeight">Max. Weight: </label>
+                  <input type="text" name="maxWeight" value={form.maxWeight} onChange={handleChange} />
+              {form.maxWeight === "" ? "": errors.weight && <p className={style.errors} >{errors.weight}</p>}
+            
+          </div>
 
-          <label htmlFor="minHeight">Min. Height: </label>
+          <div className={style.containerInputs}>
+            
+              <label className={style.text} htmlFor="minHeight">Min. Height: </label>
               <input type="text" name="minHeight" value={form.minHeight} onChange={handleChange} />
-          
-          <label htmlFor="maxHeight">Max. Height: </label>
-              <input type="text" name="maxHeight" value={form.maxHeight} onChange={handleChange} />
-          {form.maxHeight === "" ? "": errors.height && <p>{errors.height}</p>}
+            
+              <label className={`${style.text} ${style.twins}`} htmlFor="maxHeight">Max. Height: </label>
+                  <input type="text" name="maxHeight" value={form.maxHeight} onChange={handleChange} />
+              {form.maxHeight === "" ? "": errors.height && <p className={style.errors} >{errors.height}</p>}
+            
+          </div>
 
-          <label htmlFor="lifeLength">Life Expectation: </label>
-              <input type="text" name="lifeLength" value={form.lifeLength} onChange={handleChange} />
-          {form.lifeLength === "" ? "": errors.lifeLength && <p>{errors.lifeLength}</p>}
+          <div className={style.containerInputs}>
+            <label className={style.text} htmlFor="lifeLength">Life Expectation: </label>
+                <input type="text" name="lifeLength" value={form.lifeLength} onChange={handleChange} />
+            {form.lifeLength === "" ? "": errors.lifeLength && <p className={style.errors} >{errors.lifeLength}</p>}
+          </div>
 
-          <label htmlFor="image">Image: </label>
-              <input type="text" name="image" value={form.image} onChange={handleChange} />
-          {form.image === "" ? "": errors.image && <p>{errors.image}</p>}
+          <div className={style.containerInputs}>
+            <label className={style.text} htmlFor="image">Image: </label>
+                <input type="text" name="image" value={form.image} onChange={handleChange} />
+            {form.image === "" ? "": errors.image && <p className={style.errors} >{errors.image}</p>}
+          </div>
 
-          <button form="form" type='submit'>Done!</button>
         
+          <div className={style.tempMenu}>
+            <span className={style.text}>Add your Dogs temperaments: </span>
+              <select onChange={handleTemps}>
+                  <option disabled value="">Temperaments</option>
+                  {temperaments.map(t => (                      
+                      <option value={t.name} key={t.id}>{t.name}</option>
+                  ))}
+              </select>
+              
+              <div className={style.showedTemps}>
+                {form.temperaments.map(t => {
+                  return <div className={style.tempBox} key={t} onClick={() => handleDelete(t)}>
+                            <span>{t}</span>
+                        </div>
+                })}
+              </div>
+              <p className={style.text}>Note: To delete a temperament, just click it and it will pop!</p>
+
+          </div>
+
         </form>
+          
+        <button className={style.btn}form="form" type='submit'>Done!</button>
+        
     </div>
   );
 };

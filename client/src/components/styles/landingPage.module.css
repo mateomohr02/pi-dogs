@@ -1,0 +1,55 @@
+@font-face {
+    font-family: 'Acme';
+    src: url('./Acme-Regular.ttf');
+}
+
+.title{
+    display: inline;
+    font-family: 'Acme';
+    font-size: 5rem;
+}
+
+.img{
+    height: 50vh;
+}
+
+.container{
+    display: flex;
+    flex-direction: column;
+    padding-top: 7vh;
+    background-image: url(https://static.vecteezy.com/system/resources/previews/017/551/368/non_2x/many-prints-of-dog-paws-and-bones-on-white-background-pattern-for-design-vector.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 99.9vw;
+    height: 93vh;
+    align-items: center;
+}
+.btn{
+    width: fit-content;
+    text-decoration: none;
+    font-family: 'Acme';
+    font-size: 2rem;
+    color: black;
+    border: 1px solid black;
+    border-radius: 5px; 
+    padding: 3px;
+    background-color: rgba(128, 128, 128, 0.329);  
+}
+
+.btn:hover{
+    text-shadow: 1px 1px black;
+    border-width: 2px;
+}
+
+.icon{
+    margin-left: 1rem;
+    width: 100px;
+}
+
+.contTitle{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+}
