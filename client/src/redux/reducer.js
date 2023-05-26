@@ -43,6 +43,13 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 detail: []
             }
+
+        case "RESET_HOME":
+            return{
+                ...state,
+                filteredDogs:[]
+            }
+            
         case "WEIGHT_ORDER":
                 const { payload: order } = action;
               

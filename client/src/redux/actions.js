@@ -105,3 +105,12 @@ export function resetDetail() {
         payload: []
     }
 }
+
+//RESET HOME
+
+export function resetHome() {
+    return{
+        type:"RESET_HOME",
+        payload: []
+    }
+}

@@ -8,7 +8,7 @@
 
   import {useDispatch, useSelector} from 'react-redux'
 
-  import { getAllDogs, getTemps, handleAlphabeticalOrder, handleFilterOrigin, handleFilterTemps, handleWeightOrder } from "../redux/actions";
+  import { getAllDogs, getTemps, handleAlphabeticalOrder, handleFilterOrigin, handleFilterTemps, handleWeightOrder, resetHome } from "../redux/actions";
 
 
 
@@ -17,6 +17,8 @@
     const allDogs = useSelector(state => state.dogs);
     const allTemperaments = useSelector (state => state.temperaments)
     const filteredDogs = useSelector(state => state.filteredDogs)
+
+
 
     const [currentPage, setPage] = useState(1);
 
@@ -42,6 +44,8 @@
     useEffect(()=>{
       dispatch(getAllDogs())
       dispatch(getTemps())
+
+      return () => dispatch(resetHome())
     },[dispatch])
 
     useEffect(() => {
