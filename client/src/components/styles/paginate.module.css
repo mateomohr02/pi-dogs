@@ -12,6 +12,8 @@
     height: 7.5vh;
     width: 100vw;
     border-top: 1px solid black;
+    position: fixed;
+    bottom: 0;
 }
 .buttonPaginate{
     margin: 10px;

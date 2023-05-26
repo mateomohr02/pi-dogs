@@ -4,6 +4,8 @@
   import Paginate from './paginate'
   import styles from './styles/home.module.css'
 
+  import {motion} from "framer-motion"
+
   import { useLocation } from 'react-router-dom';
 
   import {useDispatch, useSelector} from 'react-redux'
@@ -13,15 +15,12 @@
 
 
   const Home = () => {
-
+    
     const allDogs = useSelector(state => state.dogs);
     const allTemperaments = useSelector (state => state.temperaments)
     const filteredDogs = useSelector(state => state.filteredDogs)
 
-
-
     const [currentPage, setPage] = useState(1);
-
 
     const dogsPage = 8
     
@@ -62,9 +61,6 @@
 
     const [selectedOrigin, setOrigin] = useState("All")
 
-
-
-
     const handleTempChange = (e) => {
       const temp = e.target.value;
       setTemp(temp);
@@ -102,12 +98,36 @@
       }
     }
 
-    
+    //ANIMATION
+
+    const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 1000);
+  
+      return () => {
+        clearTimeout(timer);
+      };
+    }, []);
+
+    const animationVariants = {
+      hidden: { opacity: 0, y: 100 },
+      visible: { opacity: 1, y: 0 }
+    };
+
+
 
     return (
       //ORDEN ALFABÉTICO
       <div className={styles.displayer}>
-        <div className={styles.filters}>
+        <motion.div className={styles.filters}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          variants={animationVariants}
+          transition={{ duration: 0.5 }}        
+        >
           <div>
             <label className={styles.nameFilter}>Alphabetical Order: </label>
             <select value={selectedAlphabeticalOrder} onChange={handleOrderChange}>
@@ -159,7 +179,7 @@
 
           {location.pathname === '/create' ? "" : <SearchBar/> }
         
-        </div>
+        </motion.div>
 
           {/* BOTÓN BACK SEARCH */}
                 
@@ -168,7 +188,12 @@
         </div>
 
         {/* MOSTRAR LAS CARDS */}
-        <div className={styles.cards}>
+        <motion.div className={styles.cards}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+          variants={animationVariants}
+          transition={{ duration: 0.5 }}        
+        >
             {showedDogs.map((d) => {
               if (d.isInDB){
                 const temperaments = d.temperaments.map((temperament) => temperament.name);
@@ -195,7 +220,7 @@
               />
               }
             })}
-          </div>
+        </motion.div>
 
           {filteredDogs.length > 8 ? 
               <Paginate pageCount={pageCount} currentPage={currentPage} changePage={handlePage} />

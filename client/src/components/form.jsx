@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { createDog, getTemps } from '../redux/actions';
 
+import {motion} from "framer-motion"
+
 import style from './styles/form.module.css'
 
 import validate from './validations'
@@ -117,24 +119,48 @@ const Form = () => {
     dispatch(getTemps())
   }, [dispatch])
 
-  
+  //ANIMATION
+
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 1000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, []);
+
+  const animationVariants = {
+    hidden: { opacity: 0, y: 100 },
+    visible: { opacity: 1, y: 0 }
+  };
+
+
   return (
     <div className={style.displayer}>
-        <form className={style.form} id='form' onSubmit={(e) => handleSubmit(e)}>
+        <motion.form className={style.form} id='form' onSubmit={(e) => handleSubmit(e)}
+        initial="hidden"
+        animate={isVisible ? "visible" : "hidden"}
+        variants={animationVariants}
+        transition={{ duration: 0.5 }}     
+        >
 
           <div className={style.containerInputs}>
             <label className={style.text} htmlFor="name">Breed Name: </label>
-                <input type="text" name="name" value={form.name} onChange={handleChange} />
+                <input type="text" name="name" value={form.name} onChange={handleChange}  autocomplete="off"/>
             {form.name === "" ? "": errors.name && <p className={style.errors} >{errors.name}</p>}
           </div>
 
           <div className={style.containerInputs}>
             
               <label className={style.text} htmlFor="minWeight">Min. Weigth: </label>
-                  <input type="text" name="minWeight" value={form.minWeight} onChange={handleChange} />
+                  <input type="text" name="minWeight" value={form.minWeight} onChange={handleChange}  autocomplete="off" />
       
               <label className={`${style.text} ${style.twins}`} htmlFor="maxWeight">Max. Weight: </label>
-                  <input type="text" name="maxWeight" value={form.maxWeight} onChange={handleChange} />
+                  <input type="text" name="maxWeight" value={form.maxWeight} onChange={handleChange}  autocomplete="off" />
               {form.maxWeight === "" ? "": errors.weight && <p className={style.errors} >{errors.weight}</p>}
             
           </div>
@@ -142,23 +168,23 @@ const Form = () => {
           <div className={style.containerInputs}>
             
               <label className={style.text} htmlFor="minHeight">Min. Height: </label>
-              <input type="text" name="minHeight" value={form.minHeight} onChange={handleChange} />
+              <input type="text" name="minHeight" value={form.minHeight} onChange={handleChange}  autocomplete="off" />
             
               <label className={`${style.text} ${style.twins}`} htmlFor="maxHeight">Max. Height: </label>
-                  <input type="text" name="maxHeight" value={form.maxHeight} onChange={handleChange} />
+                  <input type="text" name="maxHeight" value={form.maxHeight} onChange={handleChange}  autocomplete="off" />
               {form.maxHeight === "" ? "": errors.height && <p className={style.errors} >{errors.height}</p>}
             
           </div>
 
           <div className={style.containerInputs}>
             <label className={style.text} htmlFor="lifeLength">Life Expectation: </label>
-                <input type="text" name="lifeLength" value={form.lifeLength} onChange={handleChange} />
+                <input type="text" name="lifeLength" value={form.lifeLength} onChange={handleChange}  autocomplete="off" />
             {form.lifeLength === "" ? "": errors.lifeLength && <p className={style.errors} >{errors.lifeLength}</p>}
           </div>
 
           <div className={style.containerInputs}>
             <label className={style.text} htmlFor="image">Image: </label>
-                <input type="text" name="image" value={form.image} onChange={handleChange} />
+                <input type="text" name="image" value={form.image} onChange={handleChange}  autocomplete="off" />
             {form.image === "" ? "": errors.image && <p className={style.errors} >{errors.image}</p>}
           </div>
 
@@ -183,9 +209,14 @@ const Form = () => {
 
           </div>
 
-        </form>
+        </motion.form>
           
-        <button className={style.btn}form="form" type='submit'>Done!</button>
+        <motion.button 
+        initial="hidden"
+        animate={isVisible ? "visible" : "hidden"}
+        variants={animationVariants}
+        transition={{ duration: 0.5 }}
+        className={style.btn}form="form" type='submit'>Done!</motion.button>
         
     </div>
   );
